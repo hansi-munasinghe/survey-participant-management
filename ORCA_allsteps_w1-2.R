@@ -1,7 +1,7 @@
 # ORCA LIFT R Code:
 #   1. cleans data from screener surveys from wave 1 and 2
 #   2. determining eligibility for study 
-#   3. brings in list by Jade and Anne 
+#   3. brings in list by team
 #   4. binds with w2 paper and phone
 
 # Includes code from before J&A list (commented out) for reference
@@ -27,7 +27,7 @@ library(janitor)
 # library(randomizeR)
 # library(experiment)
 
-setwd("I:/Projects/Active/_KC METRO/ORCA LIFT/3. Recruitment/Recruitment_DataManagement")
+setwd("project_directory")
 
 # Define functions ==============================================================================
 
@@ -211,7 +211,7 @@ screen_eligible <- function(survey_data)
 # Bring in data ====================================================================
 
 # Screener surveys - wave 1 (phone and online) + wave 2 (online)
-# This is what Jade and Anne worked with, so no need to bring in again
+# This is what team worked with, so no need to bring in again
 
 screener_w1_online <- read_csv(
   "screener_data/screener_w1+w2/FFPT Screener questions - online_March 7, 2022_19.56.csv",
@@ -225,9 +225,9 @@ screener_w2_online <- read_csv(
   "screener_data/screener_w1+w2/ORCA LIFT Wave 2 Screener questions - online_March 7, 2022_19.55.csv",
   col_names = TRUE)
 
-# Bring in list by Jade and Anne ( assume = w1 online and phone + w2 online)
+# Bring in list by team ( assume = w1 online and phone + w2 online)
 editedlist <- read_excel(
-  "I:\\Projects\\Active\\_KC METRO\\ORCA LIFT\\5. Data collection\\Participant Management\\recovery\\EDITEDLIST_Participant list PRIMARY updated 4-6 v1.xlsx",
+  "Participant Management\\recovery\\EDITEDLIST_Participant list PRIMARY updated 4-6 v1.xlsx",
   sheet = "List with updated contact info",
   col_names = TRUE,
   guess_max = 2500) # this step is slow - time to drink water!
@@ -241,10 +241,10 @@ screener_w2_phone <- read_csv(
   col_names = TRUE)
 
 # wave 2 paper (note - wave 1 had no paper surveys)
-# this was compiled by Jade with support from language services
+# this was compiled by J with support from language services
 # note - rough paper surveys - doing this last min to get demographics to client. clean later
 screener_w2_paper <- read_csv(
-   "I:\\Projects\\Active\\_KC METRO\\ORCA LIFT\\3. Recruitment\\Recruitment_DataManagement\\screener_data\\screener_w2\\ORCA LIFT Paper survey clean 4-13-22.csv",
+   "Recruitment_DataManagement\\screener_data\\screener_w2\\ORCA LIFT Paper survey clean 4-13-22.csv",
     col_names = T)
  
 
@@ -258,7 +258,7 @@ screener_w2_paper <- screener_w2_paper %>%
   screen_clean()  %>%
   mutate(wave = "w2", survey_name = "paper survey")
 
-# starting with J&A list so no longer need clean w1 online, w1 phone, w2 online
+# starting with team-editted list so no longer need clean w1 online, w1 phone, w2 online
 # but need w2 online for sweepstakes
 screener_w1_online <- screener_w1_online %>%
   screen_clean() %>%
@@ -325,7 +325,7 @@ county_eligible <- county_recoded %>%
 #   sample_n(10)
 
 # exported list of winners on Apr 29 
-# write.xlsx(winners, file = "I:\\Projects\\Active\\_KC METRO\\ORCA LIFT\\3. Recruitment\\Recruitment_DataManagement\\screener_data\\winners_arp29.xlsx",
+# write.xlsx(winners, file = "screener_data\\winners_arp29.xlsx",
 #            colNames = TRUE, rowNames = TRUE, append = FALSE, overwrite = TRUE)
 
 # not_unique <- anti_join(sweepstakes_all, sweepstakes_distinct)
@@ -399,14 +399,8 @@ repeated <- full_list %>%
 
 #drop repeats
 full_list <- full_list %>%
-  filter(unique_name != "TOD_PRO"	& address_line1 != "Todd") %>%
-  filter(unique_name != "CAT_DAO" & address_city != "AUBURN") %>% # remove assuming older based on Jade list count
-  filter(unique_name != "DOR_SAL" & address_line1 != "8805 38th ave s") %>% # remove assuming older based on Jade list count
-  filter(unique_name != "JAC_COL" & address_line1 != "720 court st woodland CA") %>% # remove assuming older based on Jade list count
-  filter(unique_name != "KEN_RIC" & address_state != "TN") %>% # removing the out-of-state version
-  filter(unique_name != "MAR_PAR" & address_city != "KENT") %>% # remove assuming older based on Jade list count
-  filter(unique_name != "RIC_MAN" & address_line1 != "1017 s i st")  %>% # remove assuming older based on Jade list count
-  filter(unique_name != "TIG_ANB" & address_line1 != "9061seward park Ave S" & is.na(address_line2)) # remove assuming older based on Jade list count
+  filter(unique_name != "notshown"	& address_line1 != "notshown") %>%
+  filter(unique_name != "notshown" & address_city != "notshown") # removed repeated or incorrect rows (not shown)
   
 # Yeay! Now you can remove unnecessary things from environment ===================
 rm(county_eligible,
@@ -602,23 +596,23 @@ baseline_contact <- full_list %>%
 
 
 
-# Method numbers for Anne
-# table(baseline_contact$method1)
-# table(baseline_contact$method2)
-# table(baseline_contact$method3)
-# table(baseline_contact$method4)
-# 
-# tabyl(baseline_contact, method1, lang_selected) %>%
-#   knitr::kable()
-# 
-# tabyl(baseline_contact, method2, lang_selected) %>%
-#   knitr::kable()
-# 
-# tabyl(baseline_contact, method3, lang_selected) %>%
-#   knitr::kable()
-# 
-# tabyl(baseline_contact, method4, lang_selected) %>%
-#   knitr::kable()
+# Method numbers for team lead
+table(baseline_contact$method1)
+table(baseline_contact$method2)
+table(baseline_contact$method3)
+table(baseline_contact$method4)
+ 
+tabyl(baseline_contact, method1, lang_selected) %>%
+  knitr::kable()
+ 
+tabyl(baseline_contact, method2, lang_selected) %>%
+  knitr::kable()
+ 
+ tabyl(baseline_contact, method3, lang_selected) %>%
+   knitr::kable()
+ 
+tabyl(baseline_contact, method4, lang_selected) %>%
+   knitr::kable()
 
 
 
@@ -642,33 +636,6 @@ baseline_contact <- full_list %>%
 # Create unique ID not connected to personal information (for LEO)
 # Create unique household ID - wait on this for when we have 
 
-  
-# exported list on Apr 27 for Anne to track contact methods
-# write.xlsx(baseline_contact, file = "I:\\Projects\\Active\\_KC METRO\\ORCA LIFT\\5. Data collection\\baseline+contactmethods.xlsx",
-#             colNames = TRUE, rowNames = TRUE, append = FALSE, overwrite = TRUE)
-
-# exported list on May 3 for Anne to track contact methods
-# write.xlsx(baseline_contact, file = "I:\\Projects\\Active\\_KC METRO\\ORCA LIFT\\5. Data collection\\baseline+contactmethods_missing.xlsx",
-#            colNames = TRUE, 
-#            rowNames = TRUE, 
-#            append = FALSE, 
-#            overwrite = TRUE,
-#            showNA = TRUE,
-#            )
-
-
-# 
-# # # exported list on May 4 for Anne to track contact methods
-# # baseline_contact <- baseline_contact %>%
-# #   select(round1:survey_email)
-# write.xlsx(baseline_contact, file = "I:\\Projects\\Active\\_KC METRO\\ORCA LIFT\\5. Data collection\\Participant Management\\baseline_contactmethods\\baseline_round1_sortafixed.xlsx",
-#            colNames = TRUE,
-#            rowNames = TRUE,
-#            append = FALSE,
-#            overwrite = TRUE,
-#            showNA = TRUE,
-#            )
-# 
 baseline_r1_email <- baseline_contact %>%
   filter(round1 == "email") %>%
   select(round1:survey_email)
@@ -680,8 +647,8 @@ baseline_r1_email$round1_day <- print(sample(days,nrow(baseline_r1_email), repla
 table(baseline_r1_email$round1_day)
 
 
-# export for Anne (to send to Metro)
-write.xlsx(baseline_r1_email, file = "I:\\Projects\\Active\\_KC METRO\\ORCA LIFT\\5. Data collection\\Participant Management\\baseline_contactmethods\\baseline_round1_email.xlsx",
+# export (to send invitations)
+write.xlsx(baseline_r1_email, file = "Participant Management\\baseline_contactmethods\\baseline_round1_email.xlsx",
            colNames = TRUE,
            rowNames = TRUE,
            append = FALSE,
@@ -689,27 +656,5 @@ write.xlsx(baseline_r1_email, file = "I:\\Projects\\Active\\_KC METRO\\ORCA LIFT
            showNA = TRUE,
 )
 
-# Household ID =================================================================
+# end =================================================================
 
-# shared contact info - address, phone, email 
-
-# households <- eligible_all %>%
-#   group_by(address_line1) %>%
-#   nest()
-
-# looking for duplicate addresses - found 760 shared add1, of which 738 are unique rows
-# address_dupes <- eligible_all %>%
-#   group_by(address_line1, address_line2) %>%
-#   mutate(address_dupes = n()) %>%
-#   ungroup() %>%
-#   filter(address_dupes > 1) %>%
-#   unique() # unique rows with shared address  
-# 
-# households <- address_dupes %>% 
-#   group_by(unique_name, address_line1) %>%
-#   mutate(name_dupes = n()) %>%
-#   ungroup() %>%
-#   filter(name_dupes <= 1) # address shared but name is not
-  
-
-# verification process - look for duplicates, use most complete info, combined with info from other rows
